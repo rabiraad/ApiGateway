@@ -1,0 +1,36 @@
+server:
+  port: 8181
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      hostname: localhost
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: PHONE-VALIDATOR
+          uri: lb://PHONE-VALIDATOR
+          predicates:
+            - Path=/api/v1/validators/**
+#          filters:
+#            - name: CircuitBreaker
+#              args:
+#                name: USER-SERVICE
+#                fallbackuri: forward:/userServiceFallBack
+        - id: SERVICE-CUSTOMER
+          uri: lb://SERVICE-CUSTOMER
+          predicates:
+            - Path=/api/v1/customers/**
+#          filters:
+#            - name: CircuitBreaker
+#              args:
+#                name: DEPARTMENT-SERVICE
+#                fallbackuri: forward:/departmentServiceFallBack
